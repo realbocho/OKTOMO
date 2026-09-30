@@ -121,6 +121,14 @@ export default function Page() {
       return bead;
     });
 
+    // 사용자가 드래그해서 카메라 시점을 자유롭게 돌려 옆면/뒷면까지 볼 수 있게 한다.
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enablePan = false;
+    controls.enableZoom = false;
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.08;
+    controls.rotateSpeed = 0.7;
+
     const resize = () => {
       const w = el.clientWidth;
       const h = el.clientHeight;
