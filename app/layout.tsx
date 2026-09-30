@@ -1,5 +1,9 @@
-// app/layout.tsx 에 추가 (서버 컴포넌트에 있어야 함)
-import type { Viewport } from 'next';
+import type { Metadata, Viewport } from 'next';
+
+export const metadata: Metadata = {
+  title: '염주',
+  description: '자기 수양을 위한 염주',
+};
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -9,3 +13,11 @@ export const viewport: Viewport = {
   viewportFit: 'cover',
   themeColor: '#070707',
 };
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="ko">
+      <body>{children}</body>
+    </html>
+  );
+}
