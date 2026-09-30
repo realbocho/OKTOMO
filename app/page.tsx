@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const BEADS = [
   { glyph: '疑', han: '知強當疑，樂讀求之。', eum: '지강당의, 낙독구지.', mean: '내가 아는 강함일지라도 마땅히 의심하며, 사색하고 읽고 살피는 가운데 더 나은 강함을 끊임없이 구한다.' },
