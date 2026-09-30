@@ -174,7 +174,9 @@ export default function Page() {
 
       // 현재 구슬(0번)을 화면 아래 정면에 두고,
       // pos가 증가할수록 고리가 한 칸씩 시계방향으로 넘어간다.
-      ring.rotation.z = current * (Math.PI * 2 / N);
+      // 링을 세워서 회전축(Y축)으로 돌린다. 구슬이 좌우로만 미끄러지지 않고
+      // 앞뒤 깊이를 오가며 실제 3D 염주처럼 돌아온다.
+      ring.rotation.set(Math.PI / 2, current * (Math.PI * 2 / N), 0);
 
       beadMeshes.forEach((bead, i) => {
         // 구슬 자체는 정면을 유지하고, 고리만 회전시킨다.
