@@ -151,15 +151,11 @@ export default function Page() {
 
     const onUp = (e: PointerEvent) => {
       if (!down) return;
-      const dx = e.clientX - down.x;
-      const dy = e.clientY - down.y;
-      const distance = Math.hypot(dx, dy);
+      const distance = Math.hypot(e.clientX - down.x, e.clientY - down.y);
 
-      if (distance > 24) {
-        dragging = true;
-        // 좌우 스와이프 한 번 = 염주 한 알.
-        go(dx < 0 ? 1 : -1);
-      } else if (!dragging) {
+      // 드래그는 OrbitControls가 카메라 시점을 담당한다.
+      // 탭만 다음 염주 한 알로 이동한다.
+      if (distance < 12) {
         const rect = renderer.domElement.getBoundingClientRect();
         go(e.clientX - rect.left < rect.width / 2 ? -1 : 1);
       }
@@ -180,6 +176,7 @@ export default function Page() {
       last = now;
 
       current += (target.current - current) * (1 - Math.exp(-dt * 5.5));
+      controls.update();
 
       // 현재 구슬(0번)을 화면 아래 정면에 두고,
       // pos가 증가할수록 고리가 한 칸씩 시계방향으로 넘어간다.
@@ -210,6 +207,7 @@ export default function Page() {
       ro.disconnect();
       dom.removeEventListener('pointerdown', onDown);
       dom.removeEventListener('pointerup', onUp);
+      controls.dispose();
       geo.dispose();
       textures.forEach((t) => t.dispose());
       beadMeshes.forEach((b) => (b.material as THREE.Material).dispose());
