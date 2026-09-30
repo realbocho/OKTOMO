@@ -114,6 +114,8 @@ export default function Page() {
       const bead = new THREE.Mesh(geo, mat);
       const a = -Math.PI / 2 + i * (Math.PI * 2 / N);
       bead.position.set(Math.cos(a) * 2.15, Math.sin(a) * 2.15, 0);
+      // 한자가 항상 관람자 쪽을 향하도록 구슬의 앞면을 바깥쪽으로 회전
+      bead.rotation.z = a + Math.PI / 2;
       ring.add(bead);
       return bead;
     });
@@ -175,6 +177,9 @@ export default function Page() {
       ring.rotation.z = current * (Math.PI * 2 / N);
 
       beadMeshes.forEach((bead, i) => {
+        const a = -Math.PI / 2 + i * (Math.PI * 2 / N);
+        // 회전하는 고리에서도 한자의 정면이 화면을 향하도록 유지
+        bead.rotation.z = a + Math.PI / 2 - ring.rotation.z;
         const active = mod(i - Math.round(current)) === 0;
         const scale = active ? 1.08 : 0.9;
         bead.scale.setScalar(scale);
