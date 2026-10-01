@@ -238,7 +238,7 @@ export default function Page() {
         }}
       >
         <span className="switch-track"><span className="switch-knob" /></span>
-        <span className="switch-label">{renewMode ? '갱신' : '행동'}</span>
+        <span className="switch-label">{renewMode ? '갱신모드' : '기본모드'}</span>
       </button>
       <div className="title">求強</div>
       <div className="canvas" ref={host} />
@@ -254,7 +254,7 @@ export default function Page() {
         {BEADS.map((_, i) => <i key={i} className={i === mod(pos) ? 'on' : ''} />)}
       </nav>
 
-      <div className="mode-caption">{renewMode ? '내가 아는 강함을 의심하고, 모르는 강함을 배운다' : '내가 아는 강함을 살아간다'}</div>
+      <div className="mode-caption">{renewMode ? '의심 · 재정의 · 독서 · 사유 · 관찰' : '정신적 · 능력적 · 도덕적 · 모든 영역에서 강하게 살기'}</div>
       <div className="hint">좌우로 넘겨 한 알씩 · 드래그하여 3D로 보기</div>
 
       <style>{css}</style>
