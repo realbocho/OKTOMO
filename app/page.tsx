@@ -58,6 +58,7 @@ function makeTexture(glyph: string) {
 export default function Page() {
   const [pos, setPos] = useState(0);
   const [renewMode, setRenewMode] = useState(false);
+  const [tab, setTab] = useState<'beads' | 'fidget'>('beads');
   const host = useRef<HTMLDivElement>(null);
   const target = useRef(0);
 
@@ -227,35 +228,47 @@ export default function Page() {
 
   return (
     <main className={`stage ${renewMode ? 'renew-mode' : ''}`}>
-      <button
-        type="button"
-        className={`mode-switch ${renewMode ? 'up' : ''}`}
-        aria-label={renewMode ? '갱신모드 끄기' : '갱신모드 켜기'}
-        aria-pressed={renewMode}
-        onClick={() => {
-          setRenewMode((v) => !v);
-          navigator.vibrate?.(12);
-        }}
-      >
-        <span className="switch-track"><span className="switch-knob" /></span>
-        <span className="switch-label">{renewMode ? '갱신모드' : '기본모드'}</span>
-      </button>
-      <div className="title">求強</div>
-      <div className="canvas" ref={host} />
-
-      <section className="text" key={mod(pos)} aria-live="polite">
-        <p className="han">{cur.han}</p>
-        <p className="eum">{cur.eum}</p>
-        <p className="mean">{cur.mean}</p>
-        <p className="example">Ex. {cur.example}</p>
-      </section>
-
-      <nav className="dots" aria-hidden>
-        {BEADS.map((_, i) => <i key={i} className={i === mod(pos) ? 'on' : ''} />)}
+      <nav className="tabs" aria-label="화면 선택">
+        <button className={tab === 'beads' ? 'active' : ''} onClick={() => setTab('beads')}>구슬</button>
+        <button className={tab === 'fidget' ? 'active' : ''} onClick={() => setTab('fidget')}>스위치</button>
       </nav>
 
-      <div className="mode-caption">{renewMode ? '의심 · 재정의 · 독서 · 사유 · 관찰' : '정신적 · 능력적 · 도덕적 · 모든 영역에서 강하게 살기'}</div>
-      <div className="hint">좌우로 넘겨 한 알씩 · 드래그하여 3D로 보기</div>
+      {tab === 'beads' ? (
+        <>
+          <div className="title">求強</div>
+          <div className="canvas" ref={host} />
+
+          <section className="text" key={mod(pos)} aria-live="polite">
+            <p className="han">{cur.han}</p>
+            <p className="eum">{cur.eum}</p>
+            <p className="mean">{cur.mean}</p>
+            <p className="example">Ex. {cur.example}</p>
+          </section>
+
+          <nav className="dots" aria-hidden>
+            {BEADS.map((_, i) => <i key={i} className={i === mod(pos) ? 'on' : ''} />)}
+          </nav>
+
+          <div className="mode-caption">{renewMode ? '의심 · 재정의 · 독서 · 사유 · 관찰' : '정신적 · 능력적 · 도덕적 · 모든 영역에서 강하게 살기'}</div>
+          <div className="hint">좌우로 넘겨 한 알씩 · 드래그하여 3D로 보기</div>
+        </>
+      ) : (
+        <section className="fidget-screen">
+          <button
+            type="button"
+            className={`fidget-switch ${renewMode ? 'up' : ''}`}
+            aria-label={renewMode ? '갱신모드 끄기' : '갱신모드 켜기'}
+            aria-pressed={renewMode}
+            onClick={() => {
+              setRenewMode((v) => !v);
+              navigator.vibrate?.(18);
+            }}
+          >
+            <span className="fidget-track"><span className="fidget-knob" /></span>
+          </button>
+          <div className="fidget-label">{renewMode ? '갱신모드' : '기본모드'}</div>
+        </section>
+      )}
 
       <style>{css}</style>
     </main>
@@ -290,62 +303,100 @@ html,body{
   -webkit-tap-highlight-color:transparent;
   touch-action:none;
 }
-.mode-switch{
+.tabs{
   position:absolute;
   top:max(env(safe-area-inset-top),16px);
-  right:18px;
+  left:50%;
   z-index:5;
-  border:0;
-  background:transparent;
-  color:#8f897e;
+  transform:translateX(-50%);
   display:flex;
-  align-items:center;
-  gap:7px;
-  padding:6px;
+  gap:22px;
+  padding:5px 2px;
+}
+.tabs button{
+  border:0;
+  border-bottom:1px solid transparent;
+  padding:5px 2px 6px;
+  background:transparent;
+  color:#514b43;
   font:inherit;
+  font-size:11px;
+  letter-spacing:.12em;
   cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
 }
-.switch-track{
-  position:relative;
-  width:30px;
-  height:18px;
-  border:1px solid #514b43;
-  border-radius:999px;
-  background:#171513;
-  box-shadow:inset 0 1px 3px #050505;
-  transition:.35s ease;
-}
-.switch-knob{
-  position:absolute;
-  top:2px;
-  left:2px;
-  width:14px;
-  height:14px;
-  border-radius:50%;
-  background:#9b8f7d;
-  box-shadow:0 1px 4px #000;
-  transition:transform .35s cubic-bezier(.2,.8,.2,1),background .35s;
-}
-.mode-switch.up .switch-track{
-  background:#27221c;
-  border-color:#8e7652;
-}
-.mode-switch.up .switch-knob{
-  transform:translateX(12px);
-  background:#d0b17d;
-}
-.switch-label{
-  font-size:10px;
-  letter-spacing:.08em;
+.tabs button.active{
+  color:#cfc3b1;
+  border-bottom-color:#8d795c;
 }
 .title{
   flex:0 0 auto;
-  margin-top:2px;
+  margin-top:44px;
   color:#e4ded2;
   font-size:18px;
   letter-spacing:.34em;
   text-indent:.34em;
+}
+.fidget-screen{
+  flex:1 1 auto;
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:28px;
+  padding-bottom:5vh;
+}
+.fidget-switch{
+  border:0;
+  background:transparent;
+  padding:0;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.fidget-track{
+  position:relative;
+  display:block;
+  width:min(70vw,300px);
+  height:min(34vw,146px);
+  min-width:220px;
+  min-height:106px;
+  border:2px solid #4d473f;
+  border-radius:999px;
+  background:#121110;
+  box-shadow:
+    inset 0 5px 16px rgba(0,0,0,.75),
+    0 12px 34px rgba(0,0,0,.25);
+  transition:.45s ease;
+}
+.fidget-knob{
+  position:absolute;
+  top:50%;
+  left:12px;
+  width:calc(min(34vw,146px) - 28px);
+  height:calc(min(34vw,146px) - 28px);
+  min-width:78px;
+  min-height:78px;
+  transform:translateY(-50%);
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#b4a38b,#71624f 58%,#393127);
+  box-shadow:
+    4px 8px 18px rgba(0,0,0,.65),
+    inset -5px -7px 12px rgba(0,0,0,.3),
+    inset 4px 4px 10px rgba(255,235,200,.12);
+  transition:transform .42s cubic-bezier(.2,.85,.2,1),background .35s;
+}
+.fidget-switch.up .fidget-track{
+  background:#1d1812;
+  border-color:#846d4e;
+}
+.fidget-switch.up .fidget-knob{
+  transform:translate(calc(min(70vw,300px) - min(34vw,146px) + 4px),-50%);
+  background:radial-gradient(circle at 35% 30%,#dbc394,#a48459 58%,#58462f);
+}
+.fidget-label{
+  color:#8f8575;
+  font-size:13px;
+  letter-spacing:.16em;
 }
 .mode-caption{
   flex:0 0 auto;
@@ -432,11 +483,14 @@ html,body{
 }
 @media (min-width:700px){
   .stage{padding-top:28px}
+  .tabs{top:24px}
   .canvas{max-height:62dvh}
   .text{margin-top:-4px}
   .hint{margin-top:16px}
 }
 @media (max-height:700px){
+  .fidget-track{min-width:190px;min-height:92px}
+  .fidget-knob{min-width:68px;min-height:68px}
   .canvas{max-height:49dvh}
   .mean{margin-top:8px;min-height:3.7em}
   .hint{margin-top:8px}
