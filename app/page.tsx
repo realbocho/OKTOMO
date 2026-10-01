@@ -267,6 +267,11 @@ export default function Page() {
             <span className="fidget-track"><span className="fidget-knob" /></span>
           </button>
           <div className="fidget-label">{renewMode ? '갱신모드' : '기본모드'}</div>
+          <div className="fidget-description">
+            {renewMode
+              ? '의심, 재정의, 독서, 사유, 관찰'
+              : '정신적, 능력적, 도덕적... 모든 영역에서 강하게 살기'}
+          </div>
         </section>
       )}
 
@@ -397,6 +402,15 @@ html,body{
   color:#8f8575;
   font-size:13px;
   letter-spacing:.16em;
+}
+.fidget-description{
+  max-width:320px;
+  color:#5f594f;
+  font-size:11px;
+  line-height:1.7;
+  letter-spacing:.04em;
+  text-align:center;
+  word-break:keep-all;
 }
 .mode-caption{
   flex:0 0 auto;
