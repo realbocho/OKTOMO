@@ -57,6 +57,7 @@ function makeTexture(glyph: string) {
 
 export default function Page() {
   const [pos, setPos] = useState(0);
+  const [renewMode, setRenewMode] = useState(false);
   const host = useRef<HTMLDivElement>(null);
   const target = useRef(0);
 
@@ -225,7 +226,20 @@ export default function Page() {
   const cur = BEADS[mod(pos)];
 
   return (
-    <main className="stage">
+    <main className={`stage ${renewMode ? 'renew-mode' : ''}`}>
+      <button
+        type="button"
+        className={`mode-switch ${renewMode ? 'up' : ''}`}
+        aria-label={renewMode ? '갱신모드 끄기' : '갱신모드 켜기'}
+        aria-pressed={renewMode}
+        onClick={() => {
+          setRenewMode((v) => !v);
+          navigator.vibrate?.(12);
+        }}
+      >
+        <span className="switch-track"><span className="switch-knob" /></span>
+        <span className="switch-label">{renewMode ? '갱신' : '행동'}</span>
+      </button>
       <div className="title">求強</div>
       <div className="canvas" ref={host} />
 
@@ -240,7 +254,8 @@ export default function Page() {
         {BEADS.map((_, i) => <i key={i} className={i === mod(pos) ? 'on' : ''} />)}
       </nav>
 
-      <div className="hint">좌우로 넘겨 한 알씩</div>
+      <div className="mode-caption">{renewMode ? '내가 아는 강함을 의심하고, 모르는 강함을 배운다' : '내가 아는 강함을 살아간다'}</div>
+      <div className="hint">좌우로 넘겨 한 알씩 · 드래그하여 3D로 보기</div>
 
       <style>{css}</style>
     </main>
@@ -275,6 +290,55 @@ html,body{
   -webkit-tap-highlight-color:transparent;
   touch-action:none;
 }
+.mode-switch{
+  position:absolute;
+  top:max(env(safe-area-inset-top),16px);
+  right:18px;
+  z-index:5;
+  border:0;
+  background:transparent;
+  color:#8f897e;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  padding:6px;
+  font:inherit;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.switch-track{
+  position:relative;
+  width:30px;
+  height:18px;
+  border:1px solid #514b43;
+  border-radius:999px;
+  background:#171513;
+  box-shadow:inset 0 1px 3px #050505;
+  transition:.35s ease;
+}
+.switch-knob{
+  position:absolute;
+  top:2px;
+  left:2px;
+  width:14px;
+  height:14px;
+  border-radius:50%;
+  background:#9b8f7d;
+  box-shadow:0 1px 4px #000;
+  transition:transform .35s cubic-bezier(.2,.8,.2,1),background .35s;
+}
+.mode-switch.up .switch-track{
+  background:#27221c;
+  border-color:#8e7652;
+}
+.mode-switch.up .switch-knob{
+  transform:translateX(12px);
+  background:#d0b17d;
+}
+.switch-label{
+  font-size:10px;
+  letter-spacing:.08em;
+}
 .title{
   flex:0 0 auto;
   margin-top:2px;
@@ -283,6 +347,22 @@ html,body{
   letter-spacing:.34em;
   text-indent:.34em;
 }
+.mode-caption{
+  flex:0 0 auto;
+  margin-top:8px;
+  color:#514b43;
+  font-size:10px;
+  letter-spacing:.08em;
+  transition:color .5s ease;
+}
+.renew-mode{
+  background:radial-gradient(ellipse at 50% 28%,#050505 0%,#000 78%);
+}
+.renew-mode .title{color:#d2c4ac}
+.renew-mode .mode-caption{color:#877860}
+.renew-mode .hint{color:#5b5040}
+.renew-mode .text .mean{color:#a49a8b}
+.renew-mode .text .example{color:#8c806e}
 .canvas{
   width:min(92vw,520px);
   flex:1 1 auto;
