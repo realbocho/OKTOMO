@@ -270,7 +270,7 @@ export default function Page() {
           <div className="fidget-description">
             {renewMode
               ? '의심, 재정의, 독서, 사유, 관찰'
-              : '정신적, 능력적, 도덕적... 모든 영역에서 강하게 살기'}
+              : '정신적, 능력적, 도덕적, 사회적... 모든 영역에서 강하게 살기'}
           </div>
         </section>
       )}
